@@ -1,6 +1,4 @@
------------------------------- MODULE wire_bug ------------------------------
-
-
+/*
 EXTENDS Integers
 
 (*--algorithm wire_bug
@@ -29,6 +27,4 @@ begin
         end if;
 end process;
 
-end algorithm; *)
-
-=============================================================================
+end algorithm; */
