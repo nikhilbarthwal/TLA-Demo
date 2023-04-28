@@ -28,3 +28,10 @@ begin
 end process;
 
 end algorithm; */
+
+using namespace std;
+
+int main(void)
+{
+    auto t = thread(withdraw_money, )
+}

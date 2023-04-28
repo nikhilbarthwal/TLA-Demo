@@ -3,3 +3,9 @@ convert.class
 states/
 *.old
 *toolbox/
+bin/
+obj/
+.vscode/
+.idea/
+
+
