@@ -11,15 +11,24 @@ namespace TLA_Demo
             Balance = startingBalance;
         }
 
-        public void Withdraw(int amount) => Balance -= amount;
-        public void Deposit(int amount) => Balance += amount;
+        public void Withdraw(int amount)
+        {
+            Thread.Sleep(250);
+            Balance -= amount;
+        }
+        
+        public void Deposit(int amount)
+        {
+            Thread.Sleep(250);
+            Balance += amount;
+        }
     }
 
     class Program
     {
         public static void Main()
         {
-            for (int i = 0; i <= 20; i++)
+            for (int i = 0; i < 20; i++)
             {
                 Console.WriteLine($"Attempt: {i+1}");
                 ProgramBug.MainBug();

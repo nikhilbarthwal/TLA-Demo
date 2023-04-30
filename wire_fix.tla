@@ -20,11 +20,12 @@ process Wire \in 1..2
 
 begin
     Transfer:
-        if amount <= acc[sender] then
-            acc[sender] := acc[sender] - amount;
-            Deposit:
-                acc[receiver] := acc[receiver] + amount;
-        end if;
+        Withdraw:
+            if amount <= acc[sender] then
+                acc[sender] := acc[sender] - amount;
+                Deposit:
+                    acc[receiver] := acc[receiver] + amount;
+            end if;
 end process;
 
 end algorithm; *)

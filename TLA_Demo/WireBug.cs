@@ -10,23 +10,27 @@ namespace TLA_Demo
             var transfer1 = Transfer(jack, jill, 65);
             var transfer2 = Transfer(jack, jill, 50);
 
-            Console.WriteLine("First transfer " + (transfer1.Result? "succeeded!" : "failed!"));
-            Console.WriteLine("Second transfer " + (transfer2.Result? "succeeded!" : "failed!"));
+            transfer1.Wait();
+            transfer2.Wait();
 
             Console.WriteLine($"Balance ins Jack's account: {jack.Balance}");
             Console.WriteLine($"Balance ins Jill's account: {jill.Balance}");
         }
 
-        private static Task<bool> Transfer(Customer sender, Customer receiver, int amount) => Task.Run(() =>
+        private static async Task Transfer(Customer sender, Customer receiver, int amount) => await Task.Run( async () =>
         {
             if (sender.Balance >= amount)
             {
-                Task.Run(() => sender.Withdraw(amount)).Wait();
-                Task.Run(() => receiver.Deposit(amount)).Wait();
-                return true;
+                await Withdraw(sender, amount);
+                await Deposit(receiver, amount);
             }
-            Console.WriteLine($"Insufficient amount in {sender.Name} account");
-            return false;
+            else
+                Console.WriteLine($"Insufficient amount in {sender.Name} account");
         });
+
+        private static Task Withdraw(Customer sender, int amount) => Task.Run(() => sender.Withdraw(amount));
+
+        private static Task Deposit(Customer receiver, int amount) => Task.Run(() => receiver.Deposit(amount));
+
     }
 }
