@@ -10,7 +10,6 @@ variables
 
 define
     NoOverdrafts == \A p \in people: acc[p] >= 0
-    \* EventuallyConsistent == <>[](acc["alice"] + acc["bob"] = 10)
 end define;
 
 process Wire \in 1..2
@@ -20,7 +19,7 @@ process Wire \in 1..2
         amount \in 1..acc[sender];
 
 begin
-    CheckFunds:
+    Transfer:
         if amount <= acc[sender] then
             Withdraw:
                 acc[sender] := acc[sender] - amount;

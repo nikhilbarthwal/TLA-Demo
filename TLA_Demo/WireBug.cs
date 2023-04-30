@@ -10,8 +10,6 @@ namespace TLA_Demo
             var transfer1 = Transfer(jack, jill, 65);
             var transfer2 = Transfer(jack, jill, 50);
 
-            Thread.Sleep(500);
-
             Console.WriteLine("First transfer " + (transfer1.Result? "succeeded!" : "failed!"));
             Console.WriteLine("Second transfer " + (transfer2.Result? "succeeded!" : "failed!"));
 
@@ -23,11 +21,11 @@ namespace TLA_Demo
         {
             if (sender.Balance >= amount)
             {
-                Task.Run(async () => await sender.Withdraw(amount)).Wait();
-                Task.Run(async () => await receiver.Deposit(amount)).Wait();
+                Task.Run(() => sender.Withdraw(amount)).Wait();
+                Task.Run(() => receiver.Deposit(amount)).Wait();
                 return true;
             }
-            Console.Error.Write($"Insufficient amount in {sender.Name} account");
+            Console.WriteLine($"Insufficient amount in {sender.Name} account");
             return false;
         });
     }

@@ -11,16 +11,17 @@ namespace TLA_Demo
             Balance = startingBalance;
         }
 
-        public Task Withdraw(int amount) => Task.Run( () => Balance -= amount);
-        public Task Deposit(int amount) => Task.Run( () => Balance += amount);
+        public void Withdraw(int amount) => Balance -= amount;
+        public void Deposit(int amount) => Balance += amount;
     }
 
     class Program
     {
         public static void Main()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i <= 20; i++)
             {
+                Console.WriteLine($"Attempt: {i+1}");
                 ProgramBug.MainBug();
                 // ProgramFixed.MainFixed();
                 Console.WriteLine("____________________________________________");

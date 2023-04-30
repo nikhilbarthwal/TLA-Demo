@@ -10,10 +10,8 @@ namespace TLA_Demo
             var transfer1 = Transfer(jack, jill, 65);
             var transfer2 = Transfer(jack, jill, 50);
 
-            Thread.Sleep(500);
-
-            Console.WriteLine("First transfer " + (transfer1.Result? "succeeded!" : "failed!"));
-            Console.WriteLine("Second transfer " + (transfer2.Result? "succeeded!" : "failed!"));
+            Console.WriteLine("First transfer " + (transfer1.Result ? "succeeded!" : "failed!"));
+            Console.WriteLine("Second transfer " + (transfer2.Result ? "succeeded!" : "failed!"));
 
             Console.WriteLine($"Balance ins Jack's account: {jack.Balance}");
             Console.WriteLine($"Balance ins Jill's account: {jill.Balance}");
@@ -21,14 +19,20 @@ namespace TLA_Demo
 
         private static Task<bool> Transfer(Customer sender, Customer receiver, int amount) => Task.Run(() =>
         {
-            if (sender.Balance >= amount)
-            {
-                Task.Run(async () => await sender.Withdraw(amount)).Wait();
-                Task.Run(async () => await receiver.Deposit(amount)).Wait();
-                return true;
-            }
-            Console.Error.Write($"Insufficient amount in {sender.Name} account");
-            return false;
+            var success = Task.Run(() =>
+                {
+                    if (sender.Balance >= amount)
+                    {
+                        sender.Withdraw(amount);
+                        return true;
+                    }
+                    Console.WriteLine($"Insufficient amount in {sender.Name} account");
+                    return false;
+                }
+            ).Result;
+
+            if (success) Task.Run(() => receiver.Deposit(amount)).Wait();
+            return success;
         });
     }
 }

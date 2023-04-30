@@ -19,11 +19,11 @@ process Wire \in 1..2
         amount \in 1..acc[sender];
 
 begin
-    CheckAndWithdraw:
+    Transfer:
         if amount <= acc[sender] then
             acc[sender] := acc[sender] - amount;
-        Deposit:
-            acc[receiver] := acc[receiver] + amount;
+            Deposit:
+                acc[receiver] := acc[receiver] + amount;
         end if;
 end process;
 
