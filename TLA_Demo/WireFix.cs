@@ -1,8 +1,8 @@
 namespace TLA_Demo
 {
-    class Program
+    class ProgramFixed
     {
-        static void Main(string[] args)
+        public static void MainFixed()
         {
             var jack = new Customer("Jack", 100);
             var jill = new Customer("Jill", 100);
@@ -10,7 +10,7 @@ namespace TLA_Demo
             var transfer1 = Transfer(jack, jill, 65);
             var transfer2 = Transfer(jack, jill, 50);
 
-            Thread.Sleep(3000);
+            Thread.Sleep(500);
 
             Console.WriteLine("First transfer " + (transfer1.Result? "succeeded!" : "failed!"));
             Console.WriteLine("Second transfer " + (transfer2.Result? "succeeded!" : "failed!"));

@@ -14,4 +14,17 @@ namespace TLA_Demo
         public Task Withdraw(int amount) => Task.Run( () => Balance -= amount);
         public Task Deposit(int amount) => Task.Run( () => Balance += amount);
     }
+
+    class Program
+    {
+        public static void Main()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                ProgramBug.MainBug();
+                // ProgramFixed.MainFixed();
+                Console.WriteLine("____________________________________________");
+            }
+        }
+    }
 }
