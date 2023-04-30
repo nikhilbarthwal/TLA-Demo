@@ -1,6 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLA-Demo", "TLA-Demo\TLA-Demo.csproj", "{F49726D4-213B-42D9-9E6D-991E98CC72FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLA_Demo", "TLA_Demo\TLA_Demo.csproj", "{F49726D4-213B-42D9-9E6D-991E98CC72FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,8 +5,8 @@ EXTENDS Integers
 
 (*--algorithm wire_bug
 variables
-    people = {"alice", "bob"},
-    acc = [p \in people |-> 5],
+    people = {"jack", "jill"},
+    acc = [p \in people |-> 100],
 
 define
     NoOverdrafts == \A p \in people: acc[p] >= 0
@@ -15,8 +15,8 @@ end define;
 
 process Wire \in 1..2
     variables
-        sender = "alice",
-        receiver = "bob",
+        sender = "jack",
+        receiver = "jill",
         amount \in 1..acc[sender];
 
 begin
