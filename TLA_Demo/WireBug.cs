@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+
 namespace TLA_Demo
 {
     class ProgramBug
@@ -7,30 +10,32 @@ namespace TLA_Demo
             var jack = new Customer("Jack", 100);
             var jill = new Customer("Jill", 100);
 
-            var transfer1 = Transfer(jack, jill, 65);
-            var transfer2 = Transfer(jack, jill, 50);
+            Thread t1 = new Thread(() => Transfer(jack, jill, 65));
+            Thread t2 = new Thread(() => Transfer(jack, jill, 50));
 
-            transfer1.Wait();
-            transfer2.Wait();
+            t1.Start(); t2.Start();
+            Thread.Sleep(1000);
+            t1.Join(); t2.Join();
 
-            Console.WriteLine($"Balance ins Jack's account: {jack.Balance}");
-            Console.WriteLine($"Balance ins Jill's account: {jill.Balance}");
+            Console.WriteLine($"Balance in Jack's account: {jack.Balance}");
+            Console.WriteLine($"Balance in Jill's account: {jill.Balance}");
         }
 
-        private static async Task Transfer(Customer sender, Customer receiver, int amount) => await Task.Run( async () =>
+        private static void Transfer(Customer sender, Customer receiver, int amount)
         {
             if (sender.Balance >= amount)
             {
-                await Withdraw(sender, amount);
-                await Deposit(receiver, amount);
+                Thread withdraw = new Thread(() => Withdraw(sender, amount));
+                withdraw.Start();withdraw.Join();
+                Thread deposit = new Thread(() => Deposit(receiver, amount));
+                deposit.Start();deposit.Join();
             }
             else
                 Console.WriteLine($"Insufficient amount in {sender.Name} account");
-        });
+        }
 
-        private static Task Withdraw(Customer sender, int amount) => Task.Run(() => sender.Withdraw(amount));
+        private static void Withdraw(Customer sender, int amount) => sender.Withdraw(amount);
 
-        private static Task Deposit(Customer receiver, int amount) => Task.Run(() => receiver.Deposit(amount));
-
+        private static void Deposit(Customer receiver, int amount) => receiver.Deposit(amount);
     }
 }

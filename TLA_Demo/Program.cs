@@ -13,13 +13,13 @@ namespace TLA_Demo
 
         public void Withdraw(int amount)
         {
-            Thread.Sleep(250);
+            Thread.Sleep(50);
             Balance -= amount;
         }
-        
+
         public void Deposit(int amount)
         {
-            Thread.Sleep(250);
+            Thread.Sleep(50);
             Balance += amount;
         }
     }
@@ -28,9 +28,9 @@ namespace TLA_Demo
     {
         public static void Main()
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 1; i <= 5; i++)
             {
-                Console.WriteLine($"Attempt: {i+1}");
+                Console.WriteLine($"Attempt: {i}");
                 ProgramBug.MainBug();
                 // ProgramFixed.MainFixed();
                 Console.WriteLine("____________________________________________");

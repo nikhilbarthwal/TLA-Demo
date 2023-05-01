@@ -31,7 +31,7 @@ namespace TLA_Demo
                 sender.Withdraw(amount);
                 return true;
         });
-        
+
         private static Task Deposit(Customer receiver, int amount) => Task.Run(() =>
         {
             var depositLock = new object();
