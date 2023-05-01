@@ -4,18 +4,18 @@ EXTENDS Integers
 
 (*--algorithm wire_fix
 variables
-    people = {"alice", "bob"},
-    acc = [p \in people |-> 5],
+    people = {"jack", "jill"},
+    acc = [p \in people |-> 100],
 
 define
     NoOverdrafts == \A p \in people: acc[p] >= 0
-    EventuallyConsistent == <>[](acc["alice"] + acc["bob"] = 10)
+    EventuallyConsistent == <>[](acc["jack"] + acc["jill"] = 200)
 end define;
 
 process Wire \in 1..2
     variables
-        sender = "alice",
-        receiver = "bob",
+        sender = "jack",
+        receiver = "jill",
         amount \in 1..acc[sender];
 
 begin
