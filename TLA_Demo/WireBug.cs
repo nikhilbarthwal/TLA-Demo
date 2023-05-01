@@ -1,11 +1,16 @@
 using System;
+using System.Reflection.Metadata;
 using System.Threading;
 
 namespace TLA_Demo
 {
     class ProgramBug
     {
-        public static void MainBug()
+        // private static Mutex mutex = new Mutex();
+        private static Mutex withdrawMutex = new Mutex();
+        private static Mutex depositMutex = new Mutex();
+
+        public static void main()
         {
             var jack = new Customer("Jack", 100);
             var jill = new Customer("Jill", 100);
@@ -14,7 +19,6 @@ namespace TLA_Demo
             Thread t2 = new Thread(() => Transfer(jack, jill, 50));
 
             t1.Start(); t2.Start();
-            Thread.Sleep(1000);
             t1.Join(); t2.Join();
 
             Console.WriteLine($"Balance in Jack's account: {jack.Balance}");
@@ -23,19 +27,29 @@ namespace TLA_Demo
 
         private static void Transfer(Customer sender, Customer receiver, int amount)
         {
+            // mutex.WaitOne();
             if (sender.Balance >= amount)
             {
-                Thread withdraw = new Thread(() => Withdraw(sender, amount));
-                withdraw.Start();withdraw.Join();
-                Thread deposit = new Thread(() => Deposit(receiver, amount));
-                deposit.Start();deposit.Join();
+                Withdraw(sender, amount);
+                Deposit(receiver, amount);
             }
             else
                 Console.WriteLine($"Insufficient amount in {sender.Name} account");
+            // mutex.ReleaseMutex();
         }
 
-        private static void Withdraw(Customer sender, int amount) => sender.Withdraw(amount);
+        private static void Withdraw(Customer sender, int amount)
+        {
+            withdrawMutex.WaitOne();
+            sender.Withdraw(amount);
+            withdrawMutex.ReleaseMutex();
+        }
 
-        private static void Deposit(Customer receiver, int amount) => receiver.Deposit(amount);
+        private static void Deposit(Customer receiver, int amount)
+        {
+            depositMutex.WaitOne();
+            receiver.Deposit(amount);
+            depositMutex.ReleaseMutex();
+        }
     }
 }

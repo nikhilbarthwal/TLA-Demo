@@ -2,43 +2,54 @@ namespace TLA_Demo
 {
     class ProgramFixed
     {
-        public static void MainFixed()
+        private static Mutex withdrawMutex = new Mutex();
+        private static Mutex depositMutex = new Mutex();
+
+        public static void main()
         {
             var jack = new Customer("Jack", 100);
             var jill = new Customer("Jill", 100);
 
-            var transfer1 = Transfer(jack, jill, 65);
-            var transfer2 = Transfer(jack, jill, 50);
+            Thread t1 = new Thread(() => Transfer(jack, jill, 65));
+            Thread t2 = new Thread(() => Transfer(jack, jill, 50));
 
-            transfer1.Wait();
-            transfer2.Wait();
+            t1.Start();
+            t2.Start();
+            t1.Join();
+            t2.Join();
 
-            Console.WriteLine($"Balance ins Jack's account: {jack.Balance}");
-            Console.WriteLine($"Balance ins Jill's account: {jill.Balance}");
+            Console.WriteLine($"Balance in Jack's account: {jack.Balance}");
+            Console.WriteLine($"Balance in Jill's account: {jill.Balance}");
         }
 
-        private static async Task Transfer(Customer sender, Customer receiver, int amount) => await Task.Run( async () =>
+        private static void Transfer(Customer sender, Customer receiver, int amount)
         {
-            if (Withdraw(sender, amount).Result)
-                await Deposit(receiver, amount);
+            bool b;
+            Withdraw(sender, amount, out b);
+            if (b)
+                Deposit(receiver, amount);
             else
                 Console.WriteLine($"Insufficient amount in {sender.Name} account");
-        });
+        }
 
-        private static Task<bool> Withdraw(Customer sender, int amount) => Task.Run(() =>
+        private static void Withdraw(Customer sender, int amount, out bool b)
         {
-                if (sender.Balance < amount) return false;
-                sender.Withdraw(amount);
-                return true;
-        });
-
-        private static Task Deposit(Customer receiver, int amount) => Task.Run(() =>
-        {
-            var depositLock = new object();
-            lock (depositLock)
+            withdrawMutex.WaitOne();
+            if (sender.Balance < amount)
+                b = false;
+            else
             {
-                receiver.Deposit(amount);
+                sender.Withdraw(amount);
+                b = true;
             }
-        });
+            withdrawMutex.ReleaseMutex();
+        }
+
+        private static void Deposit(Customer receiver, int amount)
+        {
+            depositMutex.WaitOne();
+            receiver.Deposit(amount);
+            depositMutex.ReleaseMutex();
+        }
     }
 }

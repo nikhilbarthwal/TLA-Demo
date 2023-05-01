@@ -31,8 +31,8 @@ namespace TLA_Demo
             for (int i = 1; i <= 5; i++)
             {
                 Console.WriteLine($"Attempt: {i}");
-                ProgramBug.MainBug();
-                // ProgramFixed.MainFixed();
+                ProgramBug.main();
+                // ProgramFixed.main();
                 Console.WriteLine("____________________________________________");
             }
         }
