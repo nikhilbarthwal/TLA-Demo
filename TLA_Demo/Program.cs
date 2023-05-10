@@ -28,13 +28,8 @@ namespace TLA_Demo
     {
         public static void Main()
         {
-            for (int i = 1; i <= 5; i++)
-            {
-                Console.WriteLine($"Attempt: {i}");
-                ProgramBug.main();
-                // ProgramFixed.main();
-                Console.WriteLine("____________________________________________");
-            }
+            ProgramBug.Start();
+            // ProgramFixed.Start();
         }
     }
 }

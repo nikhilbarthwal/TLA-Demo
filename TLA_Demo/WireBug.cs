@@ -6,11 +6,11 @@ namespace TLA_Demo
 {
     class ProgramBug
     {
-        // private static Mutex mutex = new Mutex();
-        private static Mutex withdrawMutex = new Mutex();
-        private static Mutex depositMutex = new Mutex();
+        private static readonly Mutex CheckMutex = new Mutex();
+        private static readonly Mutex WithdrawMutex = new Mutex();
+        private static readonly Mutex DepositMutex = new Mutex();
 
-        public static void main()
+        public static void Start()
         {
             var jack = new Customer("Jack", 100);
             var jill = new Customer("Jill", 100);
@@ -27,29 +27,35 @@ namespace TLA_Demo
 
         private static void Transfer(Customer sender, Customer receiver, int amount)
         {
-            // mutex.WaitOne();
-            if (sender.Balance >= amount)
+            if (Check(sender, amount))
             {
                 Withdraw(sender, amount);
                 Deposit(receiver, amount);
             }
             else
                 Console.WriteLine($"Insufficient amount in {sender.Name} account");
-            // mutex.ReleaseMutex();
+        }
+
+        private static bool Check(Customer sender, int amount)
+        {
+            CheckMutex.WaitOne();
+            bool b = sender.Balance >= amount;
+            CheckMutex.ReleaseMutex();
+            return b;
         }
 
         private static void Withdraw(Customer sender, int amount)
         {
-            withdrawMutex.WaitOne();
+            WithdrawMutex.WaitOne();
             sender.Withdraw(amount);
-            withdrawMutex.ReleaseMutex();
+            WithdrawMutex.ReleaseMutex();
         }
 
         private static void Deposit(Customer receiver, int amount)
         {
-            depositMutex.WaitOne();
+            DepositMutex.WaitOne();
             receiver.Deposit(amount);
-            depositMutex.ReleaseMutex();
+            DepositMutex.ReleaseMutex();
         }
     }
 }
