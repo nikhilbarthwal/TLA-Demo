@@ -1,0 +1,8 @@
+ ALGORITHM
+-----------
+
+if amount <= acc[sender] then                   // Thread safe Check
+	acc[sender] := acc[sender] - amount         // Thread safe Withdraw
+    acc[receiver] := acc[receiver] + amount     // Thread safe Deposit
+end if
+		

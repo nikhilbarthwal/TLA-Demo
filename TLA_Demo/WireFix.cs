@@ -5,7 +5,7 @@ namespace TLA_Demo
         private static readonly Mutex WithdrawMutex = new Mutex();
         private static readonly Mutex DepositMutex = new Mutex();
 
-        public static void main()
+        public static void Start()
         {
             var jack = new Customer("Jack", 100);
             var jill = new Customer("Jill", 100);
@@ -24,25 +24,26 @@ namespace TLA_Demo
 
         private static void Transfer(Customer sender, Customer receiver, int amount)
         {
-            if (CheckAndWithdraw(sender, amount))
+            bool check;
+            CheckAndWithdraw(sender, amount, out check);
+
+            if (check)
                 Deposit(receiver, amount);
             else
                 Console.WriteLine($"Insufficient amount in {sender.Name} account");
         }
 
-        private static bool CheckAndWithdraw(Customer sender, int amount)
+        private static void CheckAndWithdraw(Customer sender, int amount, out bool check)
         {
             WithdrawMutex.WaitOne();
-            bool b;
             if (sender.Balance < amount)
-                b = false;
+                check = false;
             else
             {
                 sender.Withdraw(amount);
-                b = true;
+                check = true;
             }
             WithdrawMutex.ReleaseMutex();
-            return b;
         }
 
         private static void Deposit(Customer receiver, int amount)
