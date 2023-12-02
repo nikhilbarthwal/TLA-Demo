@@ -28,8 +28,11 @@ namespace TLA_Demo
     {
         public static void Main()
         {
-            ProgramBug.Start();
-            // ProgramFixed.Start();
+            #if FIXED
+                ProgramFixed.Start();
+            #else
+                ProgramBug.Start();
+            #endif
         }
     }
 }
