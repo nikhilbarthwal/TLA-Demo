@@ -29,9 +29,9 @@ namespace TLA_Demo
         public static void Main()
         {
             #if FIXED
-                ProgramBug.Start();
-            #else
                 ProgramFixed.Start();
+            #else
+                ProgramBug.Start();
             #endif
         }
     }
